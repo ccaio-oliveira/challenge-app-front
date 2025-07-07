@@ -3,10 +3,11 @@ import 'package:http/http.dart' as http;
 
 class AuthService {
   static const String baseUrl = 'http://localhost:3000';
+  http.Client httpClient = http.Client();
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     final url = Uri.parse('$baseUrl/auth/login');
-    final response = await http.post(
+    final response = await httpClient.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': email, 'password': password}),
