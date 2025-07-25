@@ -1,3 +1,4 @@
+import 'package:challenge_app_flutter/screens/challenge_list_screen.dart';
 import 'package:challenge_app_flutter/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,18 +61,27 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('auth_token');
+
       final result = await _authService.login(
         _emailController.text,
         _passwordController.text,
       );
 
       final token = result['access_token'];
-      final prefs = await SharedPreferences.getInstance();
       await prefs.setString('auth_token', token);
 
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Login realizado com sucesso!')));
+
+      await Future.delayed(Duration(milliseconds: 500));
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ChallengeListScreen()),
+      );
     } catch (e) {
       setState(() {
         _errorMessage = 'E-mail ou senha inválidos';

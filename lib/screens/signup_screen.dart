@@ -30,7 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
       return false;
     }
 
-    final emailRegex = RegExp(r'^[\W\.-]+@[\w\.-]+@[\w\.-]+\.\w+$');
+    final emailRegex = RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$');
     if (!emailRegex.hasMatch(email)) {
       setState(() {
         _errorMessage = 'Informe um e-mail válido';

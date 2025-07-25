@@ -67,7 +67,10 @@ void main() {
       if (errorFinder.evaluate().isEmpty) {
         expect(find.byType(SnackBar), findsOneWidget);
       } else {
-        expect(errorFinder, findsOneWidget);
+        expect(
+          find.text('A senha deve ter pelo menos 6 caracteres'),
+          findsOneWidget,
+        );
       }
     });
 
