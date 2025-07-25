@@ -1,3 +1,4 @@
+import 'package:challenge_app_flutter/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 
@@ -57,22 +58,16 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: InputDecoration(labelText: 'E-mail'),
               keyboardType: TextInputType.emailAddress,
             ),
-
             SizedBox(height: 16),
-
             TextField(
               controller: _passwordController,
               decoration: InputDecoration(labelText: 'Senha'),
               obscureText: true,
             ),
-
             SizedBox(height: 16),
-
             if (_errorMessage != null)
               Text(_errorMessage!, style: TextStyle(color: Colors.red)),
-
             SizedBox(height: 16),
-
             _isLoading
                 ? CircularProgressIndicator()
                 : SizedBox(
@@ -82,6 +77,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text('Entrar'),
                     ),
                   ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignupScreen()),
+                );
+              },
+              child: Text('Não tem uma conta? Cadastre-se'),
+            ),
           ],
         ),
       ),

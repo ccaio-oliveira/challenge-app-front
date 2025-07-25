@@ -19,4 +19,17 @@ class AuthService {
       throw Exception('Login inválido');
     }
   }
+
+  Future<void> register(String name, String email, String password) async {
+    final url = Uri.parse('$baseUrl/users');
+    final response = await httpClient.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'name': name, 'email': email, 'password': password}),
+    );
+
+    if (response.statusCode != 201 && response.statusCode != 200) {
+      throw Exception('Erro ao registrar usuário: ${response.body}');
+    }
+  }
 }
