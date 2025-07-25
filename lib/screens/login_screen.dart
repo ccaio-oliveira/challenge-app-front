@@ -17,7 +17,42 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   String? _errorMessage;
 
+  bool _validateFields() {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() {
+        _errorMessage = 'Por favor, preencha todos os campos.';
+      });
+      return false;
+    }
+
+    final emailRegex = RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$');
+    if (!emailRegex.hasMatch(email)) {
+      setState(() {
+        _errorMessage = 'Por favor, insira um e-mail válido.';
+      });
+      return false;
+    }
+
+    if (password.length < 6) {
+      setState(() {
+        _errorMessage = 'A senha deve ter pelo menos 6 caracteres.';
+      });
+      return false;
+    }
+
+    setState(() {
+      _errorMessage = null;
+    });
+
+    return true;
+  }
+
   void _login() async {
+    if (!_validateFields()) return;
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
