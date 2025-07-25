@@ -1,5 +1,6 @@
 import 'package:challenge_app_flutter/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -65,6 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       final token = result['access_token'];
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('auth_token', token);
+
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Login realizado com sucesso!')));
