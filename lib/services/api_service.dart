@@ -64,4 +64,34 @@ class ApiService {
       throw Exception('Erro de conexão: $e');
     }
   }
+
+  Future<bool> createChallenge(String title, String description) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    if (token == null || token.isEmpty) {
+      throw Exception('Usuário não autenticado');
+    }
+
+    final url = Uri.parse('$baseUrl/challenges');
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'title': title, 'description': description}),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 401) {
+      await prefs.remove('auth_token');
+      throw Exception('Sessão expirada. Faça login novamente.');
+    } else {
+      print('Erro backend: ${response.body}');
+      throw Exception(
+        'Erro ao criar desafio (${response.statusCode}): ${response.body}',
+      );
+    }
+  }
 }
