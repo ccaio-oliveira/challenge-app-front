@@ -128,16 +128,22 @@ class _ChallengeListScreenState extends State<ChallengeListScreen> {
               final c = challenges[index];
               return ListTile(
                 title: Text(c.title),
-                subtitle: Text(c.description),
-                trailing: Text(
-                  '${c.createdAt.day}/${c.createdAt.month}/${c.createdAt.year}',
-                  style: TextStyle(fontSize: 12),
+                subtitle: Text(
+                  '${c.description}\n${_formatDate(c.startDate)} até ${_formatDate(c.endDate)}',
                 ),
+                isThreeLine: true,
+                onTap: () {
+                  // TODO: navegação para tela de detalhes
+                },
               );
             },
           );
         },
       ),
     );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
   }
 }
