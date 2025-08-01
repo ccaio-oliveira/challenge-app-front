@@ -25,6 +25,7 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
   String? _error;
   String? _success;
 
+  final _taskFormKey = GlobalKey<FormState>();
   final _taskTitleController = TextEditingController();
   final _taskDescriptionController = TextEditingController();
   String _recurrenceType = 'daily';
@@ -63,54 +64,70 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
         return AlertDialog(
           title: Text('Adicionar Tarefa'),
           content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: _taskTitleController,
-                  decoration: InputDecoration(labelText: 'Título da tarefa'),
-                ),
-                TextField(
-                  controller: _taskDescriptionController,
-                  decoration: InputDecoration(labelText: 'Descrição'),
-                ),
-                DropdownButtonFormField(
-                  value: _recurrenceType,
-                  items: [
-                    DropdownMenuItem(value: 'daily', child: Text('Diária')),
-                    DropdownMenuItem(value: 'weekly', child: Text('Semanal')),
-                    DropdownMenuItem(
-                      value: 'specific_dates',
-                      child: Text('Datas Específicas'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'weekends',
-                      child: Text('Finais de Semana'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _recurrenceType = value!;
-                    });
-                  },
-                  decoration: InputDecoration(labelText: 'Recorrência'),
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Dias da semana/Datas (ex: 1,3,5 ou 2025-08-01)',
+            child: Form(
+              key: _taskFormKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: _taskTitleController,
+                    decoration: InputDecoration(labelText: 'Título da tarefa'),
+                    validator: (val) => val == null || val.isEmpty
+                        ? 'Título é obrigatório'
+                        : null,
                   ),
-                  onChanged: (val) => _recurrenceData = val,
-                ),
-                CheckboxListTile(
-                  value: _requiredPhoto,
-                  title: Text('Exigir foto?'),
-                  onChanged: (val) {
-                    setState(() {
-                      _requiredPhoto = val ?? false;
-                    });
-                  },
-                ),
-              ],
+                  TextFormField(
+                    controller: _taskDescriptionController,
+                    decoration: InputDecoration(labelText: 'Descrição'),
+                    validator: (val) => val == null || val.isEmpty
+                        ? 'Descrição é obrigatória'
+                        : null,
+                  ),
+                  DropdownButtonFormField(
+                    value: _recurrenceType,
+                    items: [
+                      DropdownMenuItem(value: 'daily', child: Text('Diária')),
+                      DropdownMenuItem(value: 'weekly', child: Text('Semanal')),
+                      DropdownMenuItem(
+                        value: 'specific_dates',
+                        child: Text('Datas Específicas'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'weekends',
+                        child: Text('Finais de Semana'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _recurrenceType = value!;
+                      });
+                    },
+                    decoration: InputDecoration(labelText: 'Recorrência'),
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText:
+                          'Dias da semana/Datas (ex: 1,3,5 ou 2025-08-01)',
+                    ),
+                    onChanged: (val) => _recurrenceData = val,
+                    validator: (val) {
+                      if (_recurrenceType == 'specific_dates' && val!.isEmpty) {
+                        return 'Datas específicas são obrigatórias';
+                      }
+                      return null;
+                    },
+                  ),
+                  CheckboxListTile(
+                    value: _requiredPhoto,
+                    title: Text('Exigir foto?'),
+                    onChanged: (val) {
+                      setState(() {
+                        _requiredPhoto = val ?? false;
+                      });
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [
@@ -120,7 +137,14 @@ class _CreateChallengeScreenState extends State<CreateChallengeScreen> {
               },
               child: Text('Cancelar'),
             ),
-            ElevatedButton(onPressed: _addTask, child: Text('Adicionar')),
+            ElevatedButton(
+              onPressed: () {
+                if (_taskFormKey.currentState?.validate() ?? false) {
+                  _addTask();
+                }
+              },
+              child: Text('Adicionar'),
+            ),
           ],
         );
       },
