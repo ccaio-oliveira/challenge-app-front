@@ -1,5 +1,5 @@
 import 'package:challenge_app_flutter/models/challenge.dart';
-import 'package:challenge_app_flutter/screens/create_challenge_screen.dart';
+import 'package:challenge_app_flutter/screens/create_challenge_stepper_screen.dart';
 import 'package:challenge_app_flutter/screens/login_screen.dart';
 import 'package:challenge_app_flutter/services/api_service.dart';
 import 'package:flutter/material.dart';
@@ -68,11 +68,7 @@ class _ChallengeListScreenState extends State<ChallengeListScreen> {
           final result = await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CreateChallengeScreen(
-                onChallengeCreated: () {
-                  _reloadChallenges();
-                },
-              ),
+              builder: (context) => CreateChallengeStepperScreen(),
             ),
           );
 
