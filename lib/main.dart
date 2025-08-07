@@ -1,4 +1,5 @@
 import 'package:challenge_app_flutter/screens/login_screen.dart';
+import 'package:challenge_app_flutter/theme/theme_data.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Challenge App',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: appDarkBlueTheme,
       home: const LoginScreen(),
       debugShowCheckedModeBanner: false,
     );
